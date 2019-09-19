@@ -22,38 +22,81 @@ Program must use the following functions:
         This function should take the payment object literal and sipaly it on the console.
 */
 
-/*
-Interest paikd is calculated as minimum payment - ((balance * interestRate) / 12)
-*/
 
-const minimumRate = .02;
-const interestRate = .18;
-var balance = 1500
+//Interest paid is calculated as minimum payment - ((balance * interestRate) / 12)
 
-function displayWelcome() {
-    console.log(`This program will determine the time to pay off a credit card and the interest paid based on the current
+(function () {
+    const minimumRate = .02;
+    const interestRate = .18;
+    var balance = 1500
+
+    function displayWelcome() {
+        console.log(`This program will determine the time to pay off a credit card and the interest paid based on the current
 balance, the interest rate, and the monthly payments made.
 
 Balance on your credit card \$${balance}
              
 Interest Rate: ${interestRate * 100}%
 
-Assuming a minimum Payment of ${minimumRate * 100}% of the balance (\$${balance * minimumRate} min)`);
-}
+Assuming a minimum Payment of ${minimumRate* 100}% of the balance (\$${calculateMinimumPayment(balance, minimumRate)} min)
 
-function calculateMinimumPayment(balance, minimumRate) {
-    return console.log(`
-Your minimum payment would be \$${(balance * minimumRate).toFixed(2)}
+Your minimum payment would be \$${calculateMinimumPayment(balance,minimumRate).toFixed(2)}
 `);
-}
+    }
 
-function scheduleHeader() {
-    console.log(`PAYOFF SCHEDULE
-______________
+    function calculateMinimumPayment(balance, minimumRate) {
+        return balance * minimumRate
+    }
+
+    function scheduleHeader() {
+        console.log(`PAYOFF SCHEDULE
+______________________
 
 Year     Balance     Payment ID     Interest Paid`);
-}
+    }
 
-displayWelcome();
-calculateMinimumPayment(balance, minimumRate);
-scheduleHeader();
+    function processPaymentSchedule(balance, interestRate, minimumRate) {
+        let monthly = {
+            year: 0,
+            balance: balance,
+            paymentID: generatePaymentID(),
+            interestPayed: (balance * interestRate) / 12
+        }
+
+        return monthly;
+
+        function generatePaymentID() {
+            var id = 1;
+            return id++;
+        }
+    }
+
+    function displayPayment(monthly) {
+        for (cnt = 0; cnt < 94; cnt++) {
+            monthly.balance = monthly.balance - (calculateMinimumPayment(balance, minimumRate) - ((monthly.balance * interestRate) / 12))
+            if (cnt % 12 == 0) {
+                monthly.year++;
+                if (monthly.balance < 0) {
+                    console.log(monthly.year + "\t 0.00" + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                } else {
+                    console.log(monthly.year + "\t " + monthly.balance.toFixed(2) + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                }
+
+            } else {
+                if (monthly.balance < 0) {
+                    console.log(" \t 0.00" + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                } else {
+                    console.log(" \t " + monthly.balance.toFixed(2) + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                }
+
+            }
+            monthly.interestPayed += (monthly.balance * interestRate) / 12;
+        }
+    }
+
+    displayWelcome();
+    calculateMinimumPayment(balance, minimumRate);
+    scheduleHeader();
+    let monthly = processPaymentSchedule(balance, interestRate, minimumRate);
+    displayPayment(monthly);
+}());
