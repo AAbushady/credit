@@ -22,15 +22,39 @@ Program must use the following functions:
         This function should take the payment object literal and sipaly it on the console.
 */
 
+const minimumRate = .02;
+const interestRate = .18;
+var balance = 1500
+
 function displayWelcome() {
-    console.log("This program will determine the time to pay off a credit card" +
-        " and the interest paid based on the current \n" +
-        "balance, the interest rate, and the monthly payments made.");
+    console.log(`This program will determine the time to pay off a credit card and the interest paid based on the current
+balance, the interest rate, and the monthly payments made.
+
+Balance on your credit card \$${balance}
+             
+Interest Rate: ${interestRate * 100}%
+
+Assuming a minum Payment of ${minimumRate * 100}% of the balance (${calculateMinimumPayment(balance, minimumRate)} min)
+
+Your minimum payment would be \$${calculateMinimumPayment(balance,minimumRate).toFixed(2)}`);
 }
 
-function calculateMinimumPayment(balance, interestRate) {
-    
+function scheduleHeader() {
+    console.log(`PAYOFF SCHEDULE
+
+______________
+
+Year     Balance     Payment ID     Interest Paid`)
+}
+
+function calculateMinimumPayment(balance, minimumRate) {
+    function generatePaymentID() {
+        var paymentId = 1;
+        return paymentId++;
+    }
+    return balance * minimumRate;
 }
 
 displayWelcome();
-calculateMinimumPayment();
+calculateMinimumPayment(balance, minimumRate);
+scheduleHeader();
