@@ -22,6 +22,10 @@ Program must use the following functions:
         This function should take the payment object literal and sipaly it on the console.
 */
 
+/*
+Interest paikd is calculated as minimum payment - ((balance * interestRate) / 12)
+*/
+
 const minimumRate = .02;
 const interestRate = .18;
 var balance = 1500
