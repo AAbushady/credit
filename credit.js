@@ -34,25 +34,20 @@ Balance on your credit card \$${balance}
              
 Interest Rate: ${interestRate * 100}%
 
-Assuming a minum Payment of ${minimumRate * 100}% of the balance (${calculateMinimumPayment(balance, minimumRate)} min)
+Assuming a minimum Payment of ${minimumRate * 100}% of the balance (\$${balance * minimumRate} min)`);
+}
 
-Your minimum payment would be \$${calculateMinimumPayment(balance,minimumRate).toFixed(2)}`);
+function calculateMinimumPayment(balance, minimumRate) {
+    return console.log(`
+Your minimum payment would be \$${(balance * minimumRate).toFixed(2)}
+`);
 }
 
 function scheduleHeader() {
     console.log(`PAYOFF SCHEDULE
-
 ______________
 
-Year     Balance     Payment ID     Interest Paid`)
-}
-
-function calculateMinimumPayment(balance, minimumRate) {
-    function generatePaymentID() {
-        var paymentId = 1;
-        return paymentId++;
-    }
-    return balance * minimumRate;
+Year     Balance     Payment ID     Interest Paid`);
 }
 
 displayWelcome();
