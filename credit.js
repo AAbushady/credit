@@ -1,35 +1,10 @@
-/*
-Program must use the following functions:
-    displayWelcome:
-        Displays welcome message to the user explaining what the program does.
-
-    calculateMinimumPayment:
-        Calculates the minimum payment. It should take the balance and interest rate
-        as arguements and return the minimum payment.
-
-        The value displplayed for minimum payment will be the one taken from this method.
-
-    generatePaymentID:
-        Closue function that generates a new payment id for the payment. Should
-        remember the previous id and new generated id should be old one plus
-        one. Make the inital id 1.
-
-    processPaymentSchedule:
-        This function will display the acutal payment schedule. It should take the
-        balance, monthly interest rate, and minium payment as arguements.
-        
-    displayPayment:
-        This function should take the payment object literal and sipaly it on the console.
-*/
-
-
-//Interest paid is calculated as minimum payment - ((balance * interestRate) / 12)
-
 (function () {
+    // Constants and variables
     const minimumRate = .02;
     const interestRate = .18;
     var balance = 1500;
 
+    // This function will display the welcome that displays what the program does.
     function displayWelcome() {
         console.log(`This program will determine the time to pay off a credit card and the interest paid based on the current
 balance, the interest rate, and the monthly payments made.
@@ -44,10 +19,13 @@ Your minimum payment would be \$${calculateMinimumPayment(balance,minimumRate).t
 `);
     }
 
+    // This function calculates what the minimum payment is based off of the minimum rate
+    // and the balance.
     function calculateMinimumPayment(balance, minimumRate) {
         return balance * minimumRate
     }
 
+    // This function creates a header for the schedule.
     function scheduleHeader() {
         console.log(`PAYOFF SCHEDULE
 ______________________
@@ -55,6 +33,12 @@ ______________________
 Year     Balance     Payment ID     Interest Paid`);
     }
 
+    /*
+    This function creates a monthly object and returns it. It will take in the minimum
+    rate, the interest rate, and the balance as arguements. Inside there is a closure method
+    called generatePaymentID which creates the payment ID that is outputted in the payment
+    schedule.
+    */
     function processPaymentSchedule(balance, interestRate, minimumRate) {
         let monthly = {
             year: 0,
@@ -64,10 +48,10 @@ Year     Balance     Payment ID     Interest Paid`);
             },
             interestPayed: (balance * interestRate) / 12
         }
-
         return monthly;
     }
 
+    //
     function displayPayment(monthly) {
         var cnt = 1;
         while (monthly.balance > 0) {
@@ -93,9 +77,17 @@ Year     Balance     Payment ID     Interest Paid`);
         }
     }
 
+    // Call all of the functions to create the payment schedule.
+    
+    // Display the welcome.
     displayWelcome();
-    calculateMinimumPayment(balance, minimumRate);
+    
+    // Create the payoff schedule header.
     scheduleHeader();
+    
+    // Create monthly with the processPaymentSchedule function.
     let monthly = processPaymentSchedule(balance, interestRate, minimumRate);
+    
+    // Use displayPayment function to create the entire schedule by looping monthly.
     displayPayment(monthly);
 }());
