@@ -1,7 +1,7 @@
 (function () {
     // Constants and variables
-    const minimumRate = .02;
-    const interestRate = .18;
+    const MINIMUMRATE = .02;
+    const INTERESTRATE = .18;
     var balance = 1500;
 
     // This function will display the welcome that displays what the program does.
@@ -11,11 +11,11 @@ balance, the interest rate, and the monthly payments made.
 
 Balance on your credit card \$${balance}
              
-Interest Rate: ${interestRate * 100}%
+Interest Rate: ${INTERESTRATE * 100}%
 
-Assuming a minimum Payment of ${minimumRate* 100}% of the balance (\$${calculateMinimumPayment(balance, minimumRate)} min)
+Assuming a minimum Payment of ${MINIMUMRATE* 100}% of the balance (\$${calculateMinimumPayment(balance, MINIMUMRATE)} min)
 
-Your minimum payment would be \$${calculateMinimumPayment(balance,minimumRate).toFixed(2)}
+Your minimum payment would be \$${calculateMinimumPayment(balance,MINIMUMRATE).toFixed(2)}
 `);
     }
 
@@ -55,7 +55,7 @@ Year     Balance     Payment ID     Interest Paid`);
     function displayPayment(monthly) {
         var cnt = 1;
         while (monthly.balance > 0) {
-            monthly.balance = monthly.balance - (calculateMinimumPayment(balance, minimumRate) - ((monthly.balance * interestRate) / 12))
+            monthly.balance = monthly.balance - (calculateMinimumPayment(balance, MINIMUMRATE) - ((monthly.balance * INTERESTRATE) / 12))
             if ((cnt % 12) - 1 == 0) {
                 monthly.year++;
                 if (monthly.balance < 0) {
@@ -72,7 +72,7 @@ Year     Balance     Payment ID     Interest Paid`);
                 }
 
             }
-            monthly.interestPayed += (monthly.balance * interestRate) / 12;
+            monthly.interestPayed += (monthly.balance * INTERESTRATE) / 12;
             cnt++;
         }
     }
@@ -86,7 +86,7 @@ Year     Balance     Payment ID     Interest Paid`);
     scheduleHeader();
     
     // Create monthly with the processPaymentSchedule function.
-    let monthly = processPaymentSchedule(balance, interestRate, minimumRate);
+    let monthly = processPaymentSchedule(balance, INTERESTRATE, MINIMUMRATE);
     
     // Use displayPayment function to create the entire schedule by looping monthly.
     displayPayment(monthly);
