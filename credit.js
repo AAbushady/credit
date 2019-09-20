@@ -28,7 +28,7 @@ Program must use the following functions:
 (function () {
     const minimumRate = .02;
     const interestRate = .18;
-    var balance = 1500
+    var balance = 1500;
 
     function displayWelcome() {
         console.log(`This program will determine the time to pay off a credit card and the interest paid based on the current
@@ -59,38 +59,37 @@ Year     Balance     Payment ID     Interest Paid`);
         let monthly = {
             year: 0,
             balance: balance,
-            paymentID: generatePaymentID(),
+            generatePaymentID: function (id) {
+                return id++;
+            },
             interestPayed: (balance * interestRate) / 12
         }
 
         return monthly;
-
-        function generatePaymentID() {
-            var id = 1;
-            return id++;
-        }
     }
 
     function displayPayment(monthly) {
-        for (cnt = 0; cnt < 94; cnt++) {
+        var cnt = 1;
+        while (monthly.balance > 0) {
             monthly.balance = monthly.balance - (calculateMinimumPayment(balance, minimumRate) - ((monthly.balance * interestRate) / 12))
-            if (cnt % 12 == 0) {
+            if ((cnt % 12) - 1 == 0) {
                 monthly.year++;
                 if (monthly.balance < 0) {
-                    console.log(monthly.year + "\t 0.00" + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                    console.log(`${monthly.year}    \$0.00     ${monthly.generatePaymentID(cnt)}      \$${monthly.interestPayed.toFixed(2)}`);
                 } else {
-                    console.log(monthly.year + "\t " + monthly.balance.toFixed(2) + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                    console.log(`${monthly.year}        \$${monthly.balance.toFixed(2)}     ${monthly.generatePaymentID(cnt)}               \$${monthly.interestPayed.toFixed(2)}`);
                 }
 
             } else {
                 if (monthly.balance < 0) {
-                    console.log(" \t 0.00" + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                    console.log(`         \$0.00     ${monthly.generatePaymentID(cnt)}               \$${monthly.interestPayed.toFixed(2)}`);
                 } else {
-                    console.log(" \t " + monthly.balance.toFixed(2) + "\t\t" + monthly.paymentID + "\t\t" + monthly.interestPayed.toFixed(2));
+                    console.log(`         \$${monthly.balance.toFixed(2)}     ${monthly.generatePaymentID(cnt)}               \$${monthly.interestPayed.toFixed(2)}`);
                 }
 
             }
             monthly.interestPayed += (monthly.balance * interestRate) / 12;
+            cnt++;
         }
     }
 
