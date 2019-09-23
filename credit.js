@@ -43,15 +43,21 @@ Year     Balance     Payment ID     Interest Paid`);
         let monthly = {
             year: 0,
             balance: balance,
-            generatePaymentID: function (id) {
-                return id++;
-            },
+            paymentID: 0,
             interestPayed: (balance * interestRate) / 12
         }
         return monthly;
     }
 
-    //
+    var generatePaymentID = (function () {
+        var id = 0;
+        return function () {
+            id += 1;
+            return id;
+        }
+    })();
+
+    // Creates the payment schedule using a loop that will use if statements to help with formatting.
     function displayPayment(monthly) {
         var cnt = 1;
         while (monthly.balance > 0) {
@@ -59,16 +65,16 @@ Year     Balance     Payment ID     Interest Paid`);
             if ((cnt % 12) - 1 == 0) {
                 monthly.year++;
                 if (monthly.balance < 0) {
-                    console.log(`${monthly.year}    \$0.00     ${monthly.generatePaymentID(cnt)}      \$${monthly.interestPayed.toFixed(2)}`);
+                    console.log(`${monthly.year}    \$0.00     ${generatePaymentID()}      \$${monthly.interestPayed.toFixed(2)}`);
                 } else {
-                    console.log(`${monthly.year}        \$${monthly.balance.toFixed(2)}     ${monthly.generatePaymentID(cnt)}               \$${monthly.interestPayed.toFixed(2)}`);
+                    console.log(`${monthly.year}        \$${monthly.balance.toFixed(2)}     ${generatePaymentID()}               \$${monthly.interestPayed.toFixed(2)}`);
                 }
 
             } else {
                 if (monthly.balance < 0) {
-                    console.log(`         \$0.00     ${monthly.generatePaymentID(cnt)}               \$${monthly.interestPayed.toFixed(2)}`);
+                    console.log(`         \$0.00     ${generatePaymentID()}               \$${monthly.interestPayed.toFixed(2)}`);
                 } else {
-                    console.log(`         \$${monthly.balance.toFixed(2)}     ${monthly.generatePaymentID(cnt)}               \$${monthly.interestPayed.toFixed(2)}`);
+                    console.log(`         \$${monthly.balance.toFixed(2)}     ${generatePaymentID()}               \$${monthly.interestPayed.toFixed(2)}`);
                 }
 
             }
@@ -78,16 +84,16 @@ Year     Balance     Payment ID     Interest Paid`);
     }
 
     // Call all of the functions to create the payment schedule.
-    
+
     // Display the welcome.
     displayWelcome();
-    
+
     // Create the payoff schedule header.
     scheduleHeader();
-    
+
     // Create monthly with the processPaymentSchedule function.
     let monthly = processPaymentSchedule(balance, INTERESTRATE, MINIMUMRATE);
-    
+
     // Use displayPayment function to create the entire schedule by looping monthly.
     displayPayment(monthly);
 }());
