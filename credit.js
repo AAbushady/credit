@@ -13,7 +13,7 @@ Balance on your credit card \$${balance}
              
 Interest Rate: ${INTERESTRATE * 100}%
 
-Assuming a minimum Payment of ${MINIMUMRATE* 100}% of the balance (\$${calculateMinimumPayment(balance, MINIMUMRATE)} min)
+Assuming a minimum Payment of ${MINIMUMRATE * 100}% of the balance (\$${calculateMinimumPayment(balance, MINIMUMRATE)} min)
 
 Your minimum payment would be \$${calculateMinimumPayment(balance,MINIMUMRATE).toFixed(2)}
 `);
@@ -33,6 +33,13 @@ ______________________
 Year     Balance     Payment ID     Interest Paid`);
     }
 
+    var generatePaymentID = (function () {
+        var id = 1;
+        return function () {
+            return id++;
+        }
+    })();
+
     /*
     This function creates a monthly object and returns it. It will take in the minimum
     rate, the interest rate, and the balance as arguements. Inside there is a closure method
@@ -40,46 +47,42 @@ Year     Balance     Payment ID     Interest Paid`);
     schedule.
     */
     function processPaymentSchedule(balance, interestRate, minimumRate) {
-        let monthly = {
-            year: 0,
-            balance: balance,
-            paymentID: 0,
-            interestPayed: (balance * interestRate) / 12
+        var minimumPayment = calculateMinimumPayment(balance, minimumRate);
+        var cnt = 1;
+        var year = 1;
+        var interest = 0;
+        while (balance > 0) {
+            interest += (balance * interestRate) / 12;
+            let monthly = {
+                year: year,
+                balance: balance -= (minimumPayment - (balance * interestRate) / 12),
+                paymentID: generatePaymentID(),
+                interestPayed: interest
+            }
+            if (cnt % 12 == 0) {
+                year++;
+            }
+            displayPayment(monthly);
+            cnt++;
         }
-        return monthly;
     }
-
-    var generatePaymentID = (function () {
-        var id = 0;
-        return function () {
-            id += 1;
-            return id;
-        }
-    })();
 
     // Creates the payment schedule using a loop that will use if statements to help with formatting.
     function displayPayment(monthly) {
-        var cnt = 1;
-        while (monthly.balance > 0) {
-            monthly.balance = monthly.balance - (calculateMinimumPayment(balance, MINIMUMRATE) - ((monthly.balance * INTERESTRATE) / 12))
-            if ((cnt % 12) - 1 == 0) {
-                monthly.year++;
-                if (monthly.balance < 0) {
-                    console.log(`${monthly.year}    \$0.00     ${generatePaymentID()}      \$${monthly.interestPayed.toFixed(2)}`);
-                } else {
-                    console.log(`${monthly.year}        \$${monthly.balance.toFixed(2)}     ${generatePaymentID()}               \$${monthly.interestPayed.toFixed(2)}`);
-                }
-
+        if ((monthly.paymentID % 12) - 1 == 0) {
+            if (monthly.balance < 0) {
+                console.log(`${monthly.year}    \$0.00     ${monthly.paymentID}      \$${monthly.interestPayed.toFixed(2)}`);
             } else {
-                if (monthly.balance < 0) {
-                    console.log(`         \$0.00     ${generatePaymentID()}               \$${monthly.interestPayed.toFixed(2)}`);
-                } else {
-                    console.log(`         \$${monthly.balance.toFixed(2)}     ${generatePaymentID()}               \$${monthly.interestPayed.toFixed(2)}`);
-                }
-
+                console.log(`${monthly.year}        \$${monthly.balance.toFixed(2)}     ${monthly.paymentID}               \$${monthly.interestPayed.toFixed(2)}`);
             }
-            monthly.interestPayed += (monthly.balance * INTERESTRATE) / 12;
-            cnt++;
+
+        } else {
+            if (monthly.balance < 0) {
+                console.log(`         \$0.00     ${monthly.paymentID}               \$${monthly.interestPayed.toFixed(2)}`);
+            } else {
+                console.log(`         \$${monthly.balance.toFixed(2)}     ${monthly.paymentID}               \$${monthly.interestPayed.toFixed(2)}`);
+            }
+
         }
     }
 
@@ -92,8 +95,5 @@ Year     Balance     Payment ID     Interest Paid`);
     scheduleHeader();
 
     // Create monthly with the processPaymentSchedule function.
-    let monthly = processPaymentSchedule(balance, INTERESTRATE, MINIMUMRATE);
-
-    // Use displayPayment function to create the entire schedule by looping monthly.
-    displayPayment(monthly);
-}());
+    processPaymentSchedule(balance, INTERESTRATE, MINIMUMRATE);
+})();
