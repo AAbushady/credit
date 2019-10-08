@@ -1,8 +1,13 @@
+/*global console*/
+/*jshint esversion:6*/
+
 (function () {
+    "use strict";
+
     // Constants and variables
-    const MINIMUMRATE = .02;
-    const INTERESTRATE = .18;
-    var balance = 1500;
+    const MINIMUMRATE = 0.02;
+    const INTERESTRATE = 0.18;
+    let balance = 1500;
 
     // This function will display the welcome that displays what the program does.
     function displayWelcome() {
@@ -22,7 +27,7 @@ Your minimum payment would be \$${calculateMinimumPayment(balance,MINIMUMRATE).t
     // This function calculates what the minimum payment is based off of the minimum rate
     // and the balance.
     function calculateMinimumPayment(balance, minimumRate) {
-        return balance * minimumRate
+        return balance * minimumRate;
     }
 
     // This function creates a header for the schedule.
@@ -33,24 +38,24 @@ ______________________
 Year     Balance     Payment ID     Interest Paid`);
     }
 
-    var generatePaymentID = (function () {
-        var id = 1;
+    let generatePaymentID = (function () {
+        let id = 1;
         return function () {
             return id++;
-        }
+        };
     })();
 
-    /*
-    This function creates a monthly object and returns it. It will take in the minimum
-    rate, the interest rate, and the balance as arguements. Inside there is a closure method
-    called generatePaymentID which creates the payment ID that is outputted in the payment
-    schedule.
-    */
+
+    // This function creates a monthly object and returns it. It will take in the minimum
+    // rate, the interest rate, and the balance as arguements. Inside there is a closure method
+    // called generatePaymentID which creates the payment ID that is outputted in the payment
+    // schedule.
+
     function processPaymentSchedule(balance, interestRate, minimumRate) {
-        var minimumPayment = calculateMinimumPayment(balance, minimumRate);
-        var cnt = 1;
-        var year = 1;
-        var interest = 0;
+        let minimumPayment = calculateMinimumPayment(balance, minimumRate);
+        let cnt = 1;
+        let year = 1;
+        let interest = 0;
         while (balance > 0) {
             interest += (balance * interestRate) / 12;
             let monthly = {
@@ -58,8 +63,8 @@ Year     Balance     Payment ID     Interest Paid`);
                 balance: balance -= (minimumPayment - (balance * interestRate) / 12),
                 paymentID: generatePaymentID(),
                 interestPayed: interest
-            }
-            if (cnt % 12 == 0) {
+            };
+            if (cnt % 12 === 0) {
                 year++;
             }
             displayPayment(monthly);
@@ -69,7 +74,7 @@ Year     Balance     Payment ID     Interest Paid`);
 
     // Creates the payment schedule using a loop that will use if statements to help with formatting.
     function displayPayment(monthly) {
-        if ((monthly.paymentID % 12) - 1 == 0) {
+        if ((monthly.paymentID % 12) - 1 === 0) {
             if (monthly.balance < 0) {
                 console.log(`${monthly.year}    \$0.00     ${monthly.paymentID}      \$${monthly.interestPayed.toFixed(2)}`);
             } else {
